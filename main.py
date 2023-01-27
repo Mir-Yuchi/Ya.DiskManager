@@ -52,7 +52,8 @@ def run():
     print("\t\tWelcome", get_user_info(token)['user']['display_name'], "\U0001F44B",
           "\n\t\t\tChoose what option you want to use \U0001F447 \n",
           "\t1 - Information About User Disk \U0001F4D1"
-          "\n\t2 - Files and Folders \U0001F5C2")
+          "\n\t2 - Files and Folders \U0001F5C2"
+          "\n\t3 - Search Historical Art and Download it \U0001F50E")
     option = input()
     match option:
         case "1":
@@ -106,7 +107,48 @@ def run():
                         print(publish['description'])
                     else:
                         print("Successfully downloaded :)")
-print("bye")
+        case '3':
+            api_base_url = "https://collectionapi.metmuseum.org/public/collection/v1/"
+            api_base_objects_url = api_base_url + "objects/"
+            api_base_search_url = api_base_url + "search?q="
+
+            # def get_all_objects() -> dict:
+            #     response = requests.get(api_base_url + "objects")
+            #     return response.json() if response.status_code == 200 else response.status_code
+
+            def get_object_detail(object_id):
+                response = requests.get(f"{api_base_objects_url}{object_id}")
+                return response.json() if response.status_code == 200 else response.status_code
+
+            def object_searcher():
+                object_name = input("Write what you want to find: ")
+                response = requests.get(api_base_search_url + object_name)
+                return response.json() if response.status_code == 200 else response.status_code
+
+            def link():
+                object_ids = object_searcher()["objectIDs"]
+
+                object_info = get_object_detail(object_ids[0])["primaryImage"]
+
+                print(object_info)
+                return object_info
+
+            url = link()
+            if not url:
+                print("Couldn't find image :(")
+                return
+            need_download = input("Would you download it to your disk? (yes/no) -> ")
+            if need_download == 'yes':
+                path = input(" Enter PATH: ")
+                publish = requests.post(resources + f"upload?url={url}&path=%2F{path}",
+                                        headers={'Authorization': f'OAuth {token}'}).json()
+                if 'description' in publish:
+                    print(publish['description'])
+                else:
+                    print("Successfully downloaded :)")
+            else:
+                print("Bye, Bye")
+
 
 if __name__ == '__main__':
     run()
