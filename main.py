@@ -149,13 +149,13 @@ def run():
                         counter += 1
                     elif continue_search == 'no':
                         print('Thank for using :)  Sayonara)')
-                        #return
+                        return
                     else:
                         print("YOU DID SOMETHING WRONG!!!")
-                        #return
+                        return
                 else:
                     print("YOU DID SOMETHING WRONG!!!")
-                return
+                    return
 
 
 if __name__ == '__main__':
