@@ -53,7 +53,8 @@ def run():
           "\n\t\t\tChoose what option you want to use \U0001F447 \n",
           "\t1 - Information About User Disk \U0001F4D1"
           "\n\t2 - Files and Folders \U0001F5C2"
-          "\n\t3 - Search Historical Art and Download it \U0001F50E")
+          "\n\t3 - Search Historical Art and Download it \U0001F50E"
+          "\n\t4 - Trash \U0001F5D1")
     option = input()
     match option:
         case "1":
@@ -62,13 +63,13 @@ def run():
                   "\nUsed space \U0001F5F3: ", convert_size(info["used_space"]),
                   "\nTrash size\U0001F5D1: ", convert_size(info['trash_size']))
         case "2":
-            cin = input("\t\t\tChoose option \U0001F447"
-                        "\n\t 1 - Create a folder \U0001F4C2"
-                        "\n\t 2 - Deleting files \U0001F6AE"
-                        "\n\t 3 - Get a link to download files \U0001F4E5"
-                        "\n\t 4 - Get a link to upload files \U0001F4E4"
-                        "\n\t 5 - Upload files to disk by URL \U0001F4E4 \U0001F4E5 \n")
-            match cin:
+            next_choice = input("\t\t\tChoose option \U0001F447"
+                                "\n\t 1 - Create a folder \U0001F4C2"
+                                "\n\t 2 - Deleting files \U0001F6AE"
+                                "\n\t 3 - Get a link to download files \U0001F4E5"
+                                "\n\t 4 - Get a link to upload files \U0001F4E4"
+                                "\n\t 5 - Upload files to disk by URL \U0001F4E4 \U0001F4E5 \n")
+            match next_choice:
                 case '1':
                     path = input("  Enter name: ")
                     files = requests.put(resources + f"?path=%2F{path}",
@@ -83,7 +84,7 @@ def run():
                                     headers={'Authorization': f'OAuth {token}'})
                     print("Successfully deleted :)")
                 case '3':
-                    path = input("Enter path: ")
+                    path = input("Enter path\U000023E9: ")
                     download = requests.get(resources + f"download?path=%2F{path}",
                                             headers={'Authorization': f'OAuth {token}'}).json()
                     if 'description' in download:
@@ -91,7 +92,7 @@ def run():
                     else:
                         print("Cath the link dude -> ", download["href"])
                 case '4':
-                    path = input("Enter path: ")
+                    path = input("Enter path\U000023E9: ")
                     upload = requests.get(resources + f"upload?path=%2F{path}",
                                           headers={'Authorization': f'OAuth {token}'}).json()
                     if 'description' in upload:
@@ -99,8 +100,8 @@ def run():
                     else:
                         print("Cath the link dude -> ", upload["href"])
                 case '5':
-                    url = input("Enter URL: ")
-                    path = input("Enter PATH: ")
+                    url = input("Enter URL\U0001F517: ")
+                    path = input("Enter PATH\U000023E9: ")
                     publish = requests.post(resources + f"upload?url={url}&path=%2F{path}",
                                             headers={'Authorization': f'OAuth {token}'}).json()
                     if 'description' in publish:
@@ -133,7 +134,7 @@ def run():
                 print(object_info)
                 need_download = input("Would you download this ART to your disk\U0001F4E5? (yes/no) -> ").lower()
                 if need_download == 'yes':
-                    path = input(" Enter PATH: ")
+                    path = input(" Enter PATH\U000023E9: ")
                     publish = requests.post(resources + f"upload?url={url}&path=%2F{path}",
                                             headers={'Authorization': f'OAuth {token}'}).json()
                     if 'description' in publish:
@@ -144,7 +145,8 @@ def run():
                     if total_ids == "1":
                         print('Thank for using :)  Sayonara \U0001F44B')
                         return
-                    continue_search = input("Do you want to see another version of ART \U0001F440? (yes/no) -> ").lower()
+                    continue_search = input(
+                        "Do you want to see another version of ART \U0001F440? (yes/no) -> ").lower()
                     if continue_search == "yes":
                         counter += 1
                     elif continue_search == 'no':
@@ -156,6 +158,20 @@ def run():
                 else:
                     print("YOU DID SOMETHING WRONG!!!")
                     return
+        case '4':
+            next_choice = input("\t1 - Trash Delete\U0000267B")
+            # "\n\t2 - Restore Trash \U0001F4A2 \n")
+            match next_choice:
+                case '1':
+                    requests.delete("https://cloud-api.yandex.net/v1/disk/trash/resources",
+                                    headers={'Authorization': f'OAuth {token}'}).json()
+                    print("Trash Successfully deleted\U00002705")
+                # case '2':
+                #     path = input("  Enter Path to restore trash \U000023E9: ")
+        # restore = requests.put(f"https://cloud-api.yandex.net/v1/disk/trash/resources/restore?path=disk%2F{path}",
+        #                            headers={'Authorization': f'OAuth {token}'}).json()
+        #     print(restore)
+        #     print("Trash Successfully restored\U00002705")
 
 
 if __name__ == '__main__':
