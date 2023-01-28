@@ -112,10 +112,6 @@ def run():
             api_base_objects_url = api_base_url + "objects/"
             api_base_search_url = api_base_url + "search?q="
 
-            # def get_all_objects() -> dict:
-            #     response = requests.get(api_base_url + "objects")
-            #     return response.json() if response.status_code == 200 else response.status_code
-
             def get_object_detail(object_id):
                 response = requests.get(f"{api_base_objects_url}{object_id}")
                 return response.json() if response.status_code == 200 else response.status_code
@@ -125,29 +121,41 @@ def run():
                 response = requests.get(api_base_search_url + object_name)
                 return response.json() if response.status_code == 200 else response.status_code
 
-            def link():
-                object_ids = object_searcher()["objectIDs"]
-
-                object_info = get_object_detail(object_ids[0])["primaryImage"]
-
+            object_ids = object_searcher()["objectIDs"]
+            total_ids = len(object_ids)
+            counter = 0
+            while total_ids >= counter:
+                object_info = get_object_detail(object_ids[counter])["primaryImage"]
+                url = object_info
+                if not url:
+                    print("Couldn't find image :(")
+                    return
                 print(object_info)
-                return object_info
-
-            url = link()
-            if not url:
-                print("Couldn't find image :(")
-                return
-            need_download = input("Would you download it to your disk? (yes/no) -> ")
-            if need_download == 'yes':
-                path = input(" Enter PATH: ")
-                publish = requests.post(resources + f"upload?url={url}&path=%2F{path}",
-                                        headers={'Authorization': f'OAuth {token}'}).json()
-                if 'description' in publish:
-                    print(publish['description'])
+                need_download = input("Would you download this ART to your disk? (yes/no) -> ").lower()
+                if need_download == 'yes':
+                    path = input(" Enter PATH: ")
+                    publish = requests.post(resources + f"upload?url={url}&path=%2F{path}",
+                                            headers={'Authorization': f'OAuth {token}'}).json()
+                    if 'description' in publish:
+                        print(publish['description'])
+                    else:
+                        print("Successfully downloaded :)")
+                elif need_download == 'no':
+                    if total_ids == "1":
+                        print('Thank for using :)  Sayonara)')
+                        return
+                    continue_search = input("Do you want to see another version of ART? (yes/no) -> ").lower()
+                    if continue_search == "yes":
+                        counter += 1
+                    elif continue_search == 'no':
+                        print('Thank for using :)  Sayonara)')
+                        #return
+                    else:
+                        print("YOU DID SOMETHING WRONG!!!")
+                        #return
                 else:
-                    print("Successfully downloaded :)")
-            else:
-                print("Bye, Bye")
+                    print("YOU DID SOMETHING WRONG!!!")
+                return
 
 
 if __name__ == '__main__':
