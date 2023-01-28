@@ -160,18 +160,11 @@ def run():
                     return
         case '4':
             next_choice = input("\t1 - Trash Delete\U0000267B")
-            # "\n\t2 - Restore Trash \U0001F4A2 \n")
             match next_choice:
                 case '1':
                     requests.delete("https://cloud-api.yandex.net/v1/disk/trash/resources",
                                     headers={'Authorization': f'OAuth {token}'}).json()
                     print("Trash Successfully deleted\U00002705")
-                # case '2':
-                #     path = input("  Enter Path to restore trash \U000023E9: ")
-        # restore = requests.put(f"https://cloud-api.yandex.net/v1/disk/trash/resources/restore?path=disk%2F{path}",
-        #                            headers={'Authorization': f'OAuth {token}'}).json()
-        #     print(restore)
-        #     print("Trash Successfully restored\U00002705")
 
 
 if __name__ == '__main__':
