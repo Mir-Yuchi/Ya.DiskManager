@@ -117,7 +117,7 @@ def run():
                 return response.json() if response.status_code == 200 else response.status_code
 
             def object_searcher():
-                object_name = input("Write what you want to find: ")
+                object_name = input("Write which ART you want to find\U0001F50E: ")
                 response = requests.get(api_base_search_url + object_name)
                 return response.json() if response.status_code == 200 else response.status_code
 
@@ -131,7 +131,7 @@ def run():
                     print("Couldn't find image :(")
                     return
                 print(object_info)
-                need_download = input("Would you download this ART to your disk? (yes/no) -> ").lower()
+                need_download = input("Would you download this ART to your disk\U0001F4E5? (yes/no) -> ").lower()
                 if need_download == 'yes':
                     path = input(" Enter PATH: ")
                     publish = requests.post(resources + f"upload?url={url}&path=%2F{path}",
@@ -142,13 +142,13 @@ def run():
                         print("Successfully downloaded :)")
                 elif need_download == 'no':
                     if total_ids == "1":
-                        print('Thank for using :)  Sayonara)')
+                        print('Thank for using :)  Sayonara \U0001F44B')
                         return
-                    continue_search = input("Do you want to see another version of ART? (yes/no) -> ").lower()
+                    continue_search = input("Do you want to see another version of ART \U0001F440? (yes/no) -> ").lower()
                     if continue_search == "yes":
                         counter += 1
                     elif continue_search == 'no':
-                        print('Thank for using :)  Sayonara)')
+                        print('Thank for using :) Sayonara \U0001F44B')
                         return
                     else:
                         print("YOU DID SOMETHING WRONG!!!")
